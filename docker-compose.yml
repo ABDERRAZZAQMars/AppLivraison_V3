@@ -1,0 +1,37 @@
+version: '4'
+services:
+  mongodb:
+    image: mongo
+    ports:
+    - 27017:27017
+    networks:
+      - livraison-marhaba-net
+
+  server:
+    container_name: server
+    ports:
+      - 8000:8000
+    build: ./server
+    networks:
+      - livraison-marhaba-net
+    depends_on:
+      - mongodb
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  font-end:
+    container_name: front-end
+    ports:
+      - 3000:3000
+    build: ./front-end
+    networks:
+      - livraison-marhaba-net
+    depends_on:
+      - server
+    volumes:
+      - ./front-end/src:/app/src
+
+networks:
+  livraison-marhaba-net:
+    driver: bridge 
